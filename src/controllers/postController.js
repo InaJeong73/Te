@@ -1,31 +1,52 @@
 const { db } = require('../config/firebaseConfig');
 
 
-const getPost = async (req, res) => {
+const getAllPosts = async (req, res) => {
   try {
-    const postsSnapshot  = await db.collection('Post').get();
+      const postsSnapshot = await db.collection('Post').get();
 
-    if (postsSnapshot .empty) {
-      return res.status(404).json({ error: '팀 모집 게시물이 없습니다.' });
-    }
+      if (postsSnapshot.empty) {
+          res.status(404).json({ error: '게시물이 없습니다.' });
+          return;
+      }
 
-    const posts = [];
-    postsSnapshot.forEach((doc) => {
-      const post = doc.data();
-      post.id = doc.id;
-      posts.push(post);
-    });
+      const posts = [];
+      postsSnapshot.forEach((doc) => {
+          const post = doc.data();
+          post.id = doc.id;
+          posts.push(post);
+      });
 
-    res.status(200).json(posts);
+      res.status(200).json(posts);
   } catch (error) {
-    console.error(`팀 모집 게시물을 가져오는 중 오류 발생: ${error.message}`);
-    res.status(500).json({ error: error.message });
+      console.error(`Error getting all posts: ${error.message}`);
+      res.status(500).json({ error: error.message });
+  }
+};
+
+const getPost = async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+      const postDoc = await db.collection('Post').doc(postId).get();
+
+      if (!postDoc.exists) {
+          res.status(404).json({ error: "게시물을 찾을 수 없습니다." });
+          return;
+      }
+
+      const postData = postDoc.data();
+
+      res.status(200).json(postData);
+  } catch (error) {
+      console.error(`Error getting post: ${error.message}`);
+      res.status(500).json({ error: error.message });
   }
 };
 
 const createPost = async (req, res) => {
   try {
-    const { uid, title, teamNumber, content, category, hashtags } = req.body;
+    const { uid, title, teamNumber, content,  major,  } = req.body;
     if (!Array.isArray(hashtags) || !hashtags.every(tag => typeof tag === 'string')) {
         return res.status(400).json({ error: '해시태그는 문자열의 배열이어야 합니다.' });
       }
@@ -35,8 +56,7 @@ const createPost = async (req, res) => {
       title,
       teamNumber,
       content,
-      category,
-      hashtags,
+      major,    
     });
     const postId = postRef.id;
     await postRef.update({ postID: postId });
@@ -54,8 +74,7 @@ const editPost = async (req, res) => {
       title,
       teamNumber,
       content,
-      category,
-      hashtags,
+      major, 
     });
     res.status(200).json({ message: '게시물이 성공적으로 수정되었습니다.' });
   } catch (error) {
@@ -75,9 +94,38 @@ const deletePost = async (req, res) => {
   }
 };
 
+const getPostApplications = async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+      const postDoc = await db.collection('Post').doc(postId).get();
+
+      if (!postDoc.exists) {
+          res.status(404).json({ error: "게시물을 찾을 수 없습니다." });
+          return;
+      }
+
+      const applicationsDoc = await db.collection('applications').where('postid', '==', postId).get();
+
+      if (applicationsDoc.empty) {
+          res.status(404).json({ error: "게시물에 대한 지원서가 없습니다." });
+          return;
+      }
+
+      const applicationsData = applicationsDoc.docs.map(doc => doc.data());
+
+      res.status(200).json(applicationsData);
+  } catch (error) {
+      console.error(`Error getting applications for post: ${error.message}`);
+      res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
+  getAllPosts,
   getPost,
   createPost,
   editPost,
   deletePost,
+  getPostApplications,
 };
