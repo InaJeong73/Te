@@ -46,7 +46,7 @@ const signUp = async (req, res) => {
             region,
         });
 
-        res.status(201).json({ message: "회원가입 성공" });
+        res.status(201).json({ uid: userRecord.uid, message: "회원가입 성공" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -58,7 +58,8 @@ const login = (req, res) => {
 
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            res.status(200).json({ message: "로그인 성공" });
+            const uid = userCredential.user.uid;
+            res.status(200).json({ uid: uid, message: "로그인 성공" });
         })
         .catch((error) => {
             res.status(500).json({ error: error.message });
