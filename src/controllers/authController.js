@@ -197,11 +197,28 @@ const getProfileByCategory = async (req, res) => {
     }
 };
 
+const getAllUsers = async (req, res) => {
+    try {
+        const querySnapshot = await db.collection('users').get();
+        
+        const allUsers = [];
+        querySnapshot.forEach((doc) => {
+            allUsers.push(doc.data());
+        });
+
+        res.status(200).json(allUsers);
+    } catch (error) {
+        console.error(`Error getting all users: ${error.message}`);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     signUp,
     login,
     createProfile,
     editProfile,
     getProfile,
-    getProfileByCategory
+    getProfileByCategory,
+    getAllusers,
 };
