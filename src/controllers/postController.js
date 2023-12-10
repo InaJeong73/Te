@@ -47,9 +47,6 @@ const getPost = async (req, res) => {
 const createPost = async (req, res) => {
   try {
     const { uid, title, teamNumber, content,  major,  } = req.body;
-    if (!Array.isArray(hashtags) || !hashtags.every(tag => typeof tag === 'string')) {
-        return res.status(400).json({ error: '해시태그는 문자열의 배열이어야 합니다.' });
-      }
       
     const postRef = await db.collection('Post').add({
       uid,
@@ -69,7 +66,7 @@ const createPost = async (req, res) => {
 
 const editPost = async (req, res) => {
   try {
-    const { postId, title, teamNumber, content, category, hashtags } = req.body;
+    const { postId, title, teamNumber, content,  major,  } = req.body;
     await db.collection('Post').doc(postId).update({
       title,
       teamNumber,
