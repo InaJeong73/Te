@@ -64,7 +64,30 @@ const getApplication = async (req, res) => {
     }
 };
 
+const getApplicationsByPostId = async (req, res) => {
+    const { postId } = req.params;
+
+    try {
+        // Get all applications for a specific postId
+        const applicationsSnapshot = await db.collection('applications').where('postid', '==', postId).get();
+
+        if (applicationsSnapshot.empty) {
+            res.status(404).json({ error: "이 게시물에 대한 지원서가 없습니다." });
+            return;
+        }
+
+        const applications = applicationsSnapshot.docs.map(doc => doc.data());
+
+        res.status(200).json(applications);
+    } catch (error) {
+        console.error(`Error getting applications for post: ${error.message}`);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
 module.exports = {
     createApplication,
-    getApplication
+    getApplication,
+    getApplicationsByPostId
 };
