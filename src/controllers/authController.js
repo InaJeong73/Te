@@ -1,7 +1,5 @@
-const multer = require('multer');
-const upload = multer();
+
 const { getAuth, signInWithEmailAndPassword } = require("firebase/auth");
-const { Storage } = require('@google-cloud/storage');
 const { admin,db } = require('../config/firebaseConfig'); 
 
 //const auth = require('../config/findteammate-8edfd-firebase-adminsdk-q17ko-dc6b8251b8.json');
@@ -46,27 +44,9 @@ const login = (req, res) => {
 
 
 const createProfile = async (req, res) => {
-    const { uid, name, birth, phoneNumber, university, major, grade, region,notificationEnabled  } = req.body;
+    const { uid, name, birth, phoneNumber, university, major, grade, region,notificationEnabled ,experience, portfolio } = req.body;
 
     try {
-        // 파일 업로드를 처리
-        upload.fields([{ name: 'experience', maxCount: 1 }, { name: 'portfolio', maxCount: 1 }])(req, res, async (err) => {
-            if (err) {
-                return res.status(500).json({ error: err.message });
-            }
-
-            const experienceFile = req.files['experience'][0];
-            const portfolioFile = req.files['portfolio'][0];
-
-            // 파일을 저장할 Firebase Storage 경로 설정
-            const experienceFilePath = `users/${uid}/experience/${experienceFile.originalname}`;
-            const portfolioFilePath = `users/${uid}/portfolio/${portfolioFile.originalname}`;
-
-            // Firebase Storage에 파일 업로드
-            await bucket.upload(experienceFile.path, { destination: experienceFilePath });
-            await bucket.upload(portfolioFile.path, { destination: portfolioFilePath });
-
-            // 데이터베이스에 프로필 정보 및 파일 경로 저장
             await db.collection('users').doc(uid).set({
                 uid,
                 name,
@@ -76,13 +56,12 @@ const createProfile = async (req, res) => {
                 major,
                 grade,
                 region,
-                experience: experienceFilePath,
-                portfolio: portfolioFilePath,
+                experience,
+                portfolio,
                 notificationEnabled,
             });
 
-            res.status(200).json({ message: "프로필 생성 및 파일 업로드 완료" });
-        });
+            res.status(200).json({ message: "프로필 생성 및 정보 저장 완료" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -154,6 +133,5 @@ module.exports = {
     createProfile,
     editProfile,
     getProfile,
-    getProfileByCategory,
     getAllUsers,
 };
