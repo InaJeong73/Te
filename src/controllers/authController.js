@@ -1,9 +1,10 @@
+const multer = require('multer');
+const upload = multer();
 const { getAuth, signInWithEmailAndPassword } = require("firebase/auth");
 const { Storage } = require('@google-cloud/storage');
-const admin = require('firebase-admin');
-const serviceAccount = require('../path/to/serviceAccountKey.json');
-const { admin, db } = require('../config/firebaseConfig');
+const { admin,db } = require('../config/firebaseConfig'); 
 
+//const auth = require('../config/findteammate-8edfd-firebase-adminsdk-q17ko-dc6b8251b8.json');
 const signUp = async (req, res) => {
     const { email, password, major, grade, region } = req.body;
 
@@ -46,7 +47,7 @@ const signUp = async (req, res) => {
             region,
         });
 
-        res.status(201).json({ message: "회원가입 성공" });
+        res.status(201).json({ uid: userRecord.uid, message: "회원가입 성공" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -58,19 +59,20 @@ const login = (req, res) => {
 
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            res.status(200).json({ message: "로그인 성공" });
+            const uid = userCredential.user.uid;
+            res.status(200).json({ uid: uid, message: "로그인 성공" });
         })
         .catch((error) => {
             res.status(500).json({ error: error.message });
         });
 };
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: 'https://console.firebase.google.com/u/0/project/findteammate-8edfd/storage/findteammate-8edfd.appspot.com/files',
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert(auth),
+//     storageBucket: 'https://console.firebase.google.com/u/0/project/findteammate-8edfd/storage/findteammate-8edfd.appspot.com/files',
+// });
 
-const bucket = admin.storage().bucket();
+//const bucket = admin.storage().bucket();
 
 const createProfile = async (req, res) => {
     const { uid, name, birth, phoneNumber, university, major, grade, region,notificationEnabled  } = req.body;

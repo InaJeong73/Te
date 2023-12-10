@@ -24,7 +24,9 @@ const admin = require('firebase-admin');
 const serviceAccount = require('./findteammate-8edfd-firebase-adminsdk-q17ko-dc6b8251b8.json');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://findteammate-8edfd-default-rtdb.firebaseio.com/',
+  storageBucket:"findteammate-8edfd.appspot.com",
 });
 
 const db = admin.firestore(); // Firestore 인스턴스

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getPost,createPost, editPost, deletePost } = require('../controllers/postController');
+const { getAllPosts,getPost,createPost, editPost, deletePost,getPostApplications } = require('../controllers/postController');
 
 router.get('/getAllPosts', getAllPosts); // 모든 게시물 가져오기
 router.get('/getPost/:postId', getPost); // 특정 게시물 가져오기
