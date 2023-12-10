@@ -56,7 +56,7 @@ const createPost = async (req, res) => {
       major,    
     });
     const postId = postRef.id;
-    await postRef.update({ postID: postId });
+    await postRef.update({ postId: postId });
     res.status(201).json({ postId: postRef.id, message: '게시물이 성공적으로 생성되었습니다.' });
   } catch (error) {
     console.error(`팀 모집 게시물 생성 중 오류 발생: ${error.message}`);

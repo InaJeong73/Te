@@ -5,17 +5,29 @@ const createChatRoom = async (req, res) => {
   try {
     const { user1, user2 } = req.body;
 
-    // 채팅 방 생성 및 방 ID 가져오기
-    const chatRoomRef = await db.collection('chatRooms').add({
-      users: [user1, user2],
-      messages: []
-    });
+    // user1과 user2 중 누가 먼저 나오던지에 관계없이 정렬된 배열 생성
+    const sortedUsers = [user1, user2].sort();
 
-    const chatRoomId = chatRoomRef.id;
+    // 정렬된 배열을 이용하여 채팅방 ID 생성
+    const chatRoomId = sortedUsers.join('_');
 
-    res.status(201).json({ chatRoomId });
+    // 생성된 채팅방 ID로 채팅방을 조회
+    const chatRoomRef = db.collection('chatRooms').doc(chatRoomId);
+    const chatRoomSnapshot = await chatRoomRef.get();
+
+    if (chatRoomSnapshot.exists) {
+      // 채팅방이 이미 존재하면 해당 방의 ID를 반환합니다.
+      res.status(200).json({ chatRoomId: chatRoomSnapshot.id });
+    } else {
+      // 채팅방이 없으면 새로운 채팅방을 생성합니다.
+      await chatRoomRef.set({
+        users: sortedUsers,
+        messages: [],
+      });
+      res.status(201).json({ chatRoomId });
+    }
   } catch (error) {
-    console.error(`Error creating chat room: ${error.message}`);
+    console.error(`Error creating or finding chat room: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 };
@@ -53,12 +65,23 @@ const getChatRoomMessages = async (req, res) => {
     }
 
     const chatRoomData = chatRoomSnapshot.data();
-    res.status(200).json({ messages: chatRoomData.messages || [] });
+
+    // 메시지의 timestamp를 ISO 문자열로 변환
+    const messages = chatRoomData.messages.map(message => {
+      return {
+        ...message,
+        timestamp: message.timestamp.toDate().toISOString() // Timestamp 객체를 Date 객체로 변환 후 ISO 문자열로 변환
+      };
+    });
+
+    res.status(200).json({ messages: messages });
   } catch (error) {
     console.error(`Error getting chat room messages: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 module.exports = {
   createChatRoom,

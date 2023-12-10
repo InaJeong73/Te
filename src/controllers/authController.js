@@ -220,5 +220,5 @@ module.exports = {
     editProfile,
     getProfile,
     getProfileByCategory,
-    getAllusers,
+    getAllUsers,
 };

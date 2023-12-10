@@ -30,6 +30,8 @@ admin.initializeApp({
 });
 
 const db = admin.firestore(); // Firestore 인스턴스
+
+
 module.exports = { admin, db };
 
 
