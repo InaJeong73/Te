@@ -67,12 +67,7 @@ const login = (req, res) => {
         });
 };
 
-// admin.initializeApp({
-//     credential: admin.credential.cert(auth),
-//     storageBucket: 'https://console.firebase.google.com/u/0/project/findteammate-8edfd/storage/findteammate-8edfd.appspot.com/files',
-// });
 
-//const bucket = admin.storage().bucket();
 
 const createProfile = async (req, res) => {
     const { uid, name, birth, phoneNumber, university, major, grade, region,notificationEnabled  } = req.body;
