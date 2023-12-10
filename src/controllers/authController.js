@@ -1,7 +1,5 @@
-const multer = require('multer');
-const upload = multer();
+
 const { getAuth, signInWithEmailAndPassword } = require("firebase/auth");
-const { Storage } = require('@google-cloud/storage');
 const { admin,db } = require('../config/firebaseConfig'); 
 
 //const auth = require('../config/findteammate-8edfd-firebase-adminsdk-q17ko-dc6b8251b8.json');
@@ -18,30 +16,6 @@ const signUp = async (req, res) => {
         await db.collection('users').doc(uid).set({
             email,
             uid,
-            major,
-            grade,
-            region,
-        });
-
-        await db.collection('usersByMajor').doc(uid).set({
-            uid,
-            email,
-            major,
-            grade,
-            region,
-        });
-
-        await db.collection('usersByGrade').doc(uid).set({
-            uid,
-            email,
-            major,
-            grade,
-            region,
-        });
-
-        await db.collection('usersByRegion').doc(uid).set({
-            uid,
-            email,
             major,
             grade,
             region,
@@ -68,6 +42,7 @@ const login = (req, res) => {
 };
 
 const createProfile = async (req, res) => {
+<<<<<<< HEAD
     const { uid, name, birth, phoneNumber, university, experience, major, grade, region } = req.body;
 
     try {
@@ -84,6 +59,26 @@ const createProfile = async (req, res) => {
         });
 
         res.status(200).json({ message: "프로필 생성 완료" });
+=======
+    const { uid, name, birth, phoneNumber, university, major, grade, region,notificationEnabled ,experience, portfolio } = req.body;
+
+    try {
+            await db.collection('users').doc(uid).set({
+                uid,
+                name,
+                birth,
+                phoneNumber,
+                university,
+                major,
+                grade,
+                region,
+                experience,
+                portfolio,
+                notificationEnabled,
+            });
+
+            res.status(200).json({ message: "프로필 생성 및 정보 저장 완료" });
+>>>>>>> ee32b7b18ae1081d872b8011a3e3c64c10c644c4
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -130,24 +125,6 @@ const getProfile = async (req, res) => {
     }
 };
 
-const getProfileByCategory = async (req, res) => {
-    const { category, value } = req.params;
-
-    try {
-        const querySnapshot = await db.collection(`usersBy${category}`).where(category, '==', value).get();
-
-        const profiles = [];
-        querySnapshot.forEach((doc) => {
-            profiles.push(doc.data());
-        });
-
-        res.status(200).json(profiles);
-    } catch (error) {
-        console.error(`Error getting profiles: ${error.message}`);
-        res.status(500).json({ error: error.message });
-    }
-};
-
 const getAllUsers = async (req, res) => {
     try {
         const querySnapshot = await db.collection('users').get();
@@ -170,6 +147,5 @@ module.exports = {
     createProfile,
     editProfile,
     getProfile,
-    getProfileByCategory,
     getAllUsers,
 };
