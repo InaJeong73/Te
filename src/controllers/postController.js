@@ -66,19 +66,26 @@ const createPost = async (req, res) => {
 
 const editPost = async (req, res) => {
   try {
-    const { postId, title, teamNumber, content,  major,  } = req.body;
-    await db.collection('Post').doc(postId).update({
-      title,
-      teamNumber,
-      content,
-      major, 
-    });
+    const { postId } = req.params;
+    const { title, teamNumber, content, major } = req.body;
+
+    const postRef = db.collection('Post').doc(postId);
+
+    // 게시물이 존재하는지 확인
+    const doc = await postRef.get();
+    if (!doc.exists) {
+      return res.status(404).json({ error: "게시물을 찾을 수 없습니다." });
+    }
+
+    // 게시물 업데이트
+    await postRef.update({ title, teamNumber, content, major });
     res.status(200).json({ message: '게시물이 성공적으로 수정되었습니다.' });
   } catch (error) {
-    console.error(`Error editing team recruitment post: ${error.message}`);
+    console.error(`Error editing post: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 const deletePost = async (req, res) => {
   try {
