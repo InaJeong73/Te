@@ -34,8 +34,6 @@
 - **백엔드 프레임워크:** Express.js
 - **인증:** Firebase Authentication
 - **데이터베이스:** Firebase Firestore
-- **호스팅:** Firebase Hosting / Heroku
-- **배포:** Docker (Optional)
 
 ---
 
