@@ -5,16 +5,6 @@
 > 대학교 내 팀 프로젝트를 모집하고 지원하는 서비스의 백엔드 개발을 담당하여  
 > **Firebase Firestore를 활용한 DB 구축 및 REST API 개발**을 수행하였습니다.
 
-<br>
-
-
-![image](https://github.com/user-attachments/assets/a945bc70-8b75-470d-a67f-4156bb0fc974)
-![image](https://github.com/user-attachments/assets/6fefc6a7-eb83-4688-a2d6-90578471b5f8)
-![image](https://github.com/user-attachments/assets/6b51a5cb-2006-4fd9-834d-c443522e035c)
-
-
-<br>
-
 ---
 
 ## 📌 프로젝트 개요
@@ -26,6 +16,16 @@
 - **게시글 CRUD (생성, 수정, 삭제, 조회)**
 - **프로젝트 지원 (신청서 작성 및 조회)**
 - **채팅 기능 (채팅방 생성 및 메시지 전송)**
+
+<br>
+
+
+![image](https://github.com/user-attachments/assets/a945bc70-8b75-470d-a67f-4156bb0fc974)
+![image](https://github.com/user-attachments/assets/6fefc6a7-eb83-4688-a2d6-90578471b5f8)
+![image](https://github.com/user-attachments/assets/6b51a5cb-2006-4fd9-834d-c443522e035c)
+
+
+<br>
 
 ---
 
