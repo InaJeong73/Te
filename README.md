@@ -5,11 +5,14 @@
 > 대학교 내 팀 프로젝트를 모집하고 지원하는 서비스의 백엔드 개발을 담당하여  
 > **Firebase Firestore를 활용한 DB 구축 및 REST API 개발**을 수행하였습니다.
 
+<br>
+
+
 ![image](https://github.com/user-attachments/assets/a945bc70-8b75-470d-a67f-4156bb0fc974)
 ![image](https://github.com/user-attachments/assets/6fefc6a7-eb83-4688-a2d6-90578471b5f8)
 ![image](https://github.com/user-attachments/assets/048e549a-957b-41bb-820d-c43fd50c0849)
 
-
+<br>
 
 ---
 
@@ -152,7 +155,7 @@ curl -X POST "http://localhost:3000/api/signup" \
 ```
 
 #### ✅ **예제 응답 (JSON)**
-'''json
+'''shell
 {
   "uid": "abcd1234xyz",
   "message": "회원가입 성공"
